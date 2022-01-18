@@ -52,15 +52,48 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
     }
 
     @Override
-    public boolean abrirSesion(CredencialDTO objCredencial) throws RemoteException{
-        System.out.println(" ");
+    public int abrirSesion(CredencialDTO objCredencial) throws RemoteException{
+        switch(ocupacionBuscadaCredenciales(objCredencial)){
+            case "Admin":
+                return 0;
+            case "paf":
+                return 1;
+            case "Secretaria":
+                return 2;
+        }
+        return -1;
+    }
+
+    public boolean usuarioExiste(CredencialDTO objCredencial){
+        String tmpUsuario=objCredencial.getUsuario();
+        int contador = 0;
+        for(PersonalDTO varPersonal : personal){
+            if(personal.get(contador).getUsuario()==tmpUsuario){
+                return true;
+            }
+            contador++;
+        }
         return false;
+    }
+
+    public String ocupacionBuscadaCredenciales(CredencialDTO objCredencial){
+        if(!usuarioExiste(objCredencial)){
+            return "Inexistente";
+        }
+        String tmpUsuario=objCredencial.getUsuario();
+        int contador = 0;
+        while(contador < personal.size()){
+            if(personal.get(contador).getUsuario()==tmpUsuario){
+                return personal.get(contador).getOcupacion();
+            }
+            contador++;
+        }
+        return "Inexistente";
     }
 
     public void consultarReferenciaRemota(String direccionIpRMIRegistry, int numPuertoRMIRegistry) {
         System.out.println(" ");
         System.out.println(" Desde consultarREferenciaREmota()... ");
-        this.objReferenciaRemota=(GestionNotificacionesInt) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry,
-    numPuertoRMIRegistry, "ObjetoRemotoAlerta");
+        this.objReferenciaRemota=(GestionNotificacionesInt) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry, numPuertoRMIRegistry, "ObjetoRemotoAlerta");
     }
 }

@@ -10,6 +10,6 @@ public interface GesUsuariosInt extends Remote{
 
     public boolean registrarUsuario(PersonalDTO objUsuario) throws RemoteException; 
     public PersonalDTO consultarUsuario(int id) throws RemoteException;
-    public boolean abrirSesion(CredencialDTO objCredencial) throws RemoteException;
+    public int abrirSesion(CredencialDTO objCredencial) throws RemoteException;
 
 }
