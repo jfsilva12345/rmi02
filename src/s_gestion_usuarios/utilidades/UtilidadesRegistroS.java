@@ -1,5 +1,5 @@
 
-package servidor;
+package s_gestion_usuarios.utilidades;
 
 
 import java.net.MalformedURLException;

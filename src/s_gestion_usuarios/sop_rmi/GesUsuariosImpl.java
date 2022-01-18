@@ -1,4 +1,9 @@
-package sop_rmi;
+package s_gestion_usuarios.sop_rmi;
+
+import s_seguimiento_usuarios.sop_rmi.GestionNotificacionesInt;
+import s_gestion_usuarios.dto.PersonalDTO;
+import s_gestion_usuarios.dto.CredencialDTO;
+import s_gestion_usuarios.utilidades.UtilidadesRegistroC;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -6,7 +11,8 @@ import java.util.ArrayList;
 
 public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosInt{
     private ArrayList<PersonalDTO> personal;
-
+    private int contador=0;
+    private GestionNotificacionesInt objReferenciaRemota;
     
     public GesUsuariosImpl() throws RemoteException{
         super();
@@ -14,7 +20,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
     }
 
     @Override
-    public boolean registrarPersonal(PersonalDTO objUsuario) throws RemoteException{
+    public boolean registrarUsuario(PersonalDTO objUsuario) throws RemoteException{
         System.out.println("Entrando a registrar usuario");
         boolean bandera=false;
         
@@ -28,7 +34,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
     }
 
     @Override
-    public PersonalDTO consultarPersonal(int id) throws RemoteException{
+    public PersonalDTO consultarUsuario(int id) throws RemoteException{
         
         System.out.println("Entrando a consultar usuario");
         PersonalDTO objUsuario=null;
@@ -43,5 +49,18 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
             contador++;
         }
         return objUsuario;  
+    }
+
+    @Override
+    public boolean abrirSesion(CredencialDTO objCredencial) throws RemoteException{
+        System.out.println(" ");
+        return false;
+    }
+
+    public void consultarReferenciaRemota(String direccionIpRMIRegistry, int numPuertoRMIRegistry) {
+        System.out.println(" ");
+        System.out.println(" Desde consultarREferenciaREmota()... ");
+        this.objReferenciaRemota=(GestionNotificacionesInt) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry,
+    numPuertoRMIRegistry, "ObjetoRemotoAlerta");
     }
 }

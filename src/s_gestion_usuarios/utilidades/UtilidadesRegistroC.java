@@ -1,5 +1,4 @@
-package cliente;
-
+package s_gestion_usuarios.utilidades;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;

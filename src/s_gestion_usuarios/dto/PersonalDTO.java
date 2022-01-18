@@ -1,4 +1,4 @@
-package sop_rmi;
+package s_gestion_usuarios.dto;
 
 import java.io.Serializable;
 
