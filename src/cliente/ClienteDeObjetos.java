@@ -1,7 +1,10 @@
 package cliente;
 
-import sop_rmi.GesUsuariosInt;
-import sop_rmi.PersonalDTO;
+import s_gestion_usuarios.sop_rmi.GesUsuariosInt;
+import s_gestion_usuarios.dto.PersonalDTO;
+import s_gestion_usuarios.dto.CredencialDTO;
+import cliente.utilidades.UtilidadesConsola;
+import cliente.utilidades.UtilidadesRegistroC;
 import java.rmi.RemoteException;
 
 public class ClienteDeObjetos{
@@ -11,9 +14,9 @@ public class ClienteDeObjetos{
         int numPuertoRMIRegistry =0;
         String direccionIpRMIRegistry ="";
         System.out.println("Cual es la direccion ip donde se encuentra el rmiREgistry");
-        direccionIpRMIRegistry = cliente.UtilidadesConsola.leerCadena();
+        direccionIpRMIRegistry = UtilidadesConsola.leerCadena();
         System.out.println("Cual es el numero de puerto por el cual escucha el rmiREgistry");
-        numPuertoRMIRegistry = cliente.UtilidadesConsola.leerEntero();
+        numPuertoRMIRegistry = UtilidadesConsola.leerEntero();
 
         objRemoto = (GesUsuariosInt) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry,numPuertoRMIRegistry,"ObjetoRemotoPersonal");
         MenuPrincipal();
@@ -23,7 +26,62 @@ public class ClienteDeObjetos{
     private static void MenuPrincipal()
     {
         int opcion = 0;
+        do{
+            System.out.println("==Menu Inicio==");
+            System.out.println("1. Abrir Sesion");			
+            System.out.println("2. Salir");
+
+            opcion = UtilidadesConsola.leerEntero();
+
+             switch(opcion)
+            {
+                case 1:
+                        System.out.println("Ingrese el usuario");
+                        String varCrUsuario = UtilidadesConsola.leerCadena();
+                        System.out.println("Ingrese la clave");
+                        String varCrClave = UtilidadesConsola.leerCadena();
+                        CredencialDTO objCredencial = new CredencialDTO(varCrUsuario,varCrClave);
+
+                        int sesion = -1;
+                        try{
+                        sesion = objRemoto.abrirSesion(objCredencial);
+                        }catch(RemoteException e)
+                            {
+                                System.out.println("La operacion no se pudo completar, intente nuevamente...");
+                            }
+
+                        switch(sesion){
+                            case 0:
+                                OpcionAdmin();
+                                break;
+                            case 1:
+                                OpcionPaf();
+                                break;
+                            case 2:
+                                OpcionSecre();
+                                break;
+                            case -1:
+                                System.out.println("ERRORSISIMO");
+                                break;
+                            default:
+                                System.out.println("Opción incorrecta");
+                        }
+                break;
+
+                case 2:
+                        System.out.println("Salir...");
+                break;
+                
+                default:
+                        System.out.println("Opción incorrecta");
+            }
+
+        }while(opcion != 2);
         
+    }
+
+    private static void OpcionAdmin(){
+        int opcionAdmin=0;
         do
         {
             System.out.println("==Menu==");
@@ -31,9 +89,9 @@ public class ClienteDeObjetos{
             System.out.println("2. Consultar personal");
             System.out.println("3. Salir");
 
-            opcion = UtilidadesConsola.leerEntero();
+            opcionAdmin = UtilidadesConsola.leerEntero();
 
-            switch(opcion)
+            switch(opcionAdmin)
             {
                 case 1:
                         Opcion1();
@@ -48,7 +106,66 @@ public class ClienteDeObjetos{
                         System.out.println("Opción incorrecta");
             }
 
-        }while(opcion != 4);
+        }while(opcionAdmin != 3);
+    }
+
+
+    private static void OpcionPaf(){
+         int opcionPaf=0;
+        do
+        {
+            System.out.println("==Menu==");
+            System.out.println("1. Valorar PAF");			
+            System.out.println("2. Registrar Asistencia");
+            System.out.println("3. Salir");
+
+            opcionPaf = UtilidadesConsola.leerEntero();
+
+            switch(opcionPaf)
+            {
+                case 1:
+                        System.out.println("por implementar");
+                        break;
+                case 2:
+                        System.out.println("por implementar");
+                        break;	
+                case 3:
+                        System.out.println("Salir...");
+                        break;
+                default:
+                        System.out.println("Opción incorrecta");
+            }
+
+        }while(opcionPaf != 3);
+    }
+
+     private static void OpcionSecre(){
+         int opcionSecre = 0;
+        do
+        {
+            System.out.println("==Menu==");
+            System.out.println("1. Registrar usuario");			
+            System.out.println("2. Consultar usuario");
+            System.out.println("3. Salir");
+
+            opcionSecre = UtilidadesConsola.leerEntero();
+
+            switch(opcionSecre)
+            {
+                case 1:
+                        System.out.println("por implementar");
+                        break;
+                case 2:
+                        System.out.println("por implementar");
+                        break;	
+                case 3:
+                        System.out.println("Salir...");
+                        break;
+                default:
+                        System.out.println("Opción incorrecta");
+            }
+
+        }while(opcionSecre != 3);
     }
 
     private static void Opcion1() 
@@ -130,7 +247,7 @@ public class ClienteDeObjetos{
 
                 PersonalDTO objUsuario= new PersonalDTO(varTipoIdentificacion, varId, varNombres,varOcupacion,varUsuario,varClave);
 
-                boolean valor = objRemoto.registrarPersonal(objUsuario);//invocación al método remoto
+                boolean valor = objRemoto.registrarUsuario(objUsuario);//invocación al método remoto
                 if(valor)
                         System.out.println("Registro realizado satisfactoriamente...");
                 else
@@ -160,7 +277,7 @@ public class ClienteDeObjetos{
 
             id = UtilidadesConsola.leerEntero();
 
-            PersonalDTO personal  = objRemoto.consultarPersonal(id);
+            PersonalDTO personal  = objRemoto.consultarUsuario(id);
             System.out.println(personal.getTipo_id());
             System.out.println(personal.getId());
             System.out.println(personal.getUsuario());

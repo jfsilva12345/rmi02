@@ -13,6 +13,7 @@ public class GestionNotificacionesImpl extends UnicastRemoteObject implements Ge
  }
  @Override
  public void enviarNotificacion(NotificacionDTO objNotificacion) throws RemoteException{
-
+        System.out.println("**La persona:"+objNotificacion.getNombreCompleto()+", con ocupacion"+objNotificacion.getOcupacion()+"**");
+        System.out.println("**esta autorizado para ingresar al sistema**");
  }
 }

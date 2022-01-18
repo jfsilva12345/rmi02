@@ -57,6 +57,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
             case "Admin":
                 return 0;
             case "paf":
+                
                 return 1;
             case "Secretaria":
                 return 2;
