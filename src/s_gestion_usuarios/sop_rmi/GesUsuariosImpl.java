@@ -1,5 +1,6 @@
 package s_gestion_usuarios.sop_rmi;
 
+import s_seguimiento_usuarios.dto.NotificacionDTO;
 import s_seguimiento_usuarios.sop_rmi.GestionNotificacionesInt;
 import s_gestion_usuarios.dto.PersonalDTO;
 import s_gestion_usuarios.dto.CredencialDTO;
@@ -11,12 +12,19 @@ import java.util.ArrayList;
 
 public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosInt{
     private ArrayList<PersonalDTO> personal;
-    private int contador=0;
     private GestionNotificacionesInt objReferenciaRemota;
     
     public GesUsuariosImpl() throws RemoteException{
         super();
-        this.personal = new ArrayList();
+        this.personal = new ArrayList<>();
+        String tipoId = "CC";
+        int id = 6536;
+        String nombrecompleto = "Josefino Eusebio De las Nieves";
+        String ocupacion = "Admin";
+        String usuario = "admin12345";
+        String clave = "12345678";
+        PersonalDTO admin = new PersonalDTO(tipoId, id, nombrecompleto, ocupacion, usuario, clave);
+        personal.add(admin);
     }
 
     @Override
@@ -24,7 +32,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
         System.out.println("Entrando a registrar usuario");
         boolean bandera=false;
         
-        if(personal.size() < 2)
+        if(personal.size() < 3)
         {            
             bandera=personal.add(objUsuario);
             System.out.println("Usuario registrado: identificación: " + objUsuario.getId() + ", nombres: " + objUsuario.getNombreCompleto());
@@ -39,7 +47,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
         System.out.println("Entrando a consultar usuario");
         PersonalDTO objUsuario=null;
         int contador = 0;
-        for(PersonalDTO varPersonal : personal){
+        while(contador<personal.size()){
             if(personal.get(contador).getId()==id){
                 
                 objUsuario=personal.get(contador);
@@ -53,11 +61,14 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
 
     @Override
     public int abrirSesion(CredencialDTO objCredencial) throws RemoteException{
-        switch(ocupacionBuscadaCredenciales(objCredencial)){
+        NotificacionDTO tmpNotificacion = ocupacionBuscadaCredenciales(objCredencial);
+        String ocupacion = tmpNotificacion.getOcupacion();
+        switch(ocupacion){
             case "Admin":
                 return 0;
-            case "paf":
-                
+            case "Personal de acondicionamiento fisico":
+                NotificacionDTO notificacion = tmpNotificacion;
+                objReferenciaRemota.enviarNotificacion(notificacion);
                 return 1;
             case "Secretaria":
                 return 2;
@@ -68,7 +79,7 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
     public boolean usuarioExiste(CredencialDTO objCredencial){
         String tmpUsuario=objCredencial.getUsuario();
         int contador = 0;
-        for(PersonalDTO varPersonal : personal){
+        while(contador < personal.size()){
             if(personal.get(contador).getUsuario()==tmpUsuario){
                 return true;
             }
@@ -77,19 +88,21 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
         return false;
     }
 
-    public String ocupacionBuscadaCredenciales(CredencialDTO objCredencial){
+    public NotificacionDTO ocupacionBuscadaCredenciales(CredencialDTO objCredencial){
         if(!usuarioExiste(objCredencial)){
-            return "Inexistente";
+            return null;
         }
         String tmpUsuario=objCredencial.getUsuario();
         int contador = 0;
         while(contador < personal.size()){
             if(personal.get(contador).getUsuario()==tmpUsuario){
-                return personal.get(contador).getOcupacion();
+                PersonalDTO tmpPersonal = personal.get(contador);
+                NotificacionDTO notificacion=new NotificacionDTO(tmpPersonal.getNombreCompleto(), tmpPersonal.getOcupacion());
+                return notificacion;
             }
             contador++;
         }
-        return "Inexistente";
+        return null;
     }
 
     public void consultarReferenciaRemota(String direccionIpRMIRegistry, int numPuertoRMIRegistry) {
