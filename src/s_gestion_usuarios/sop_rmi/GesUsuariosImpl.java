@@ -47,14 +47,11 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
         System.out.println("Entrando a consultar usuario");
         PersonalDTO objUsuario=null;
         int contador = 0;
-        while(contador<personal.size()){
-            if(personal.get(contador).getId()==id){
-                
+        for (PersonalDTO personalDTO : personal) {
+            if(personalDTO.getId() == id){
                 objUsuario=personal.get(contador);
-
                 break;
             }
-            contador++;
         }
         return objUsuario;  
     }
@@ -78,12 +75,10 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
 
     public boolean usuarioExiste(CredencialDTO objCredencial){
         String tmpUsuario=objCredencial.getUsuario();
-        int contador = 0;
-        while(contador < personal.size()){
-            if(personal.get(contador).getUsuario()==tmpUsuario){
+        for (PersonalDTO personalDTO : personal) {
+            if(personalDTO.getUsuario().equals(tmpUsuario)){
                 return true;
             }
-            contador++;
         }
         return false;
     }
@@ -93,14 +88,11 @@ public class GesUsuariosImpl extends UnicastRemoteObject implements GesUsuariosI
             return null;
         }
         String tmpUsuario=objCredencial.getUsuario();
-        int contador = 0;
-        while(contador < personal.size()){
-            if(personal.get(contador).getUsuario()==tmpUsuario){
-                PersonalDTO tmpPersonal = personal.get(contador);
-                NotificacionDTO notificacion=new NotificacionDTO(tmpPersonal.getNombreCompleto(), tmpPersonal.getOcupacion());
+        for (PersonalDTO personalDTO : personal) {
+            if(personalDTO.getUsuario().equals(tmpUsuario)){
+                NotificacionDTO notificacion=new NotificacionDTO(personalDTO.getNombreCompleto(), personalDTO.getOcupacion());
                 return notificacion;
             }
-            contador++;
         }
         return null;
     }
