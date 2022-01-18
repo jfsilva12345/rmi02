@@ -1,5 +1,5 @@
 
-package s_seguimiento_usuarios.utilidades;
+package cliente.utilidades;
 
 
 import java.net.MalformedURLException;

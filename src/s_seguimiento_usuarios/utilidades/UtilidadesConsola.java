@@ -1,4 +1,4 @@
-package cliente;
+package s_seguimiento_usuarios.utilidades;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
